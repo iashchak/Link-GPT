@@ -1,2 +1,2 @@
 [target.aarch64-linux-android]
-rustc-flags = ["-C", "target-feature=+fp16"]
+rustc-flags = "-C target-feature=+fp16"
