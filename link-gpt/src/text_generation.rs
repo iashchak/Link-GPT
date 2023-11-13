@@ -13,7 +13,6 @@ pub struct TextGeneration {
     device: Device,
     tokenizer: TokenOutputStream,
     logits_processor: LogitsProcessor,
-    repeat_last_n: usize,
 }
 
 impl TextGeneration {
@@ -21,7 +20,6 @@ impl TextGeneration {
         let seed = 299792458;
         let temperature = Some(0.8);
         let top_p = None;
-        let repeat_last_n = 64;
 
         let (model, tokenizer) =
             TextGeneration::get_model_and_tokenizer(model_id).map_err(E::msg)?;
@@ -32,7 +30,6 @@ impl TextGeneration {
             model,
             tokenizer: TokenOutputStream::new(tokenizer),
             logits_processor,
-            repeat_last_n,
             device,
         });
     }
@@ -75,7 +72,6 @@ impl TextGeneration {
         }
         println!("Tokens: {:?}", tokens);
 
-        let mut generated_tokens = 0usize;
         let eos_token = match self.tokenizer.get_token("</s>") {
             Some(token) => token,
             None => anyhow::bail!("cannot find the </s> token"),
@@ -96,7 +92,6 @@ impl TextGeneration {
             let logits = logits.squeeze(0)?.squeeze(0)?.to_dtype(DType::F32)?;
             let next_token = self.logits_processor.sample(&logits)?;
             tokens.push(next_token);
-            generated_tokens += 1;
             if next_token == eos_token {
                 break;
             }

@@ -14,7 +14,7 @@ use link_gpt::message::Message;
 //   (JNIEnv *, jobject);
 #[no_mangle]
 pub unsafe extern "system" fn Java_eu_iashchak_linkgpt_Message_to_1string(
-    mut env: JNIEnv,
+    env: JNIEnv,
     _class: JClass,
     message_ptr: jlong,
 ) -> jstring {
@@ -94,7 +94,7 @@ pub extern "system" fn Java_eu_iashchak_linkgpt_HelloWorld_hello<'local>(
 
 #[no_mangle]
 pub unsafe extern "system" fn Java_eu_iashchak_linkgpt_Dialog_to_1string<'local>(
-    mut env: JNIEnv<'local>,
+    env: JNIEnv<'local>,
     _class: JClass<'local>,
     dialog_ptr: jlong,
 ) -> jstring {

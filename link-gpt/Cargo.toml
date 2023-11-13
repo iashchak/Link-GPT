@@ -14,4 +14,4 @@ hf-hub = "0.3.2"
 anyhow = "1.0.75"
 candle-core = { git = "https://github.com/iashchak/candle.git" }
 indicatif = "0.17.7"
-
+openssl = { version = "0.10", features = ["vendored"] }
