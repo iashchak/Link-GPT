@@ -10,18 +10,18 @@ extern "C" {
 /*
  * Class:     eu_iashchak_linkgpt_TextGeneration
  * Method:    new_text_generation
- * Signature: (Ljava/lang/String;)Leu/iashchak/linkgpt/TextGeneration;
+ * Signature: (Ljava/lang/String;)J
  */
-JNIEXPORT jobject JNICALL Java_eu_iashchak_linkgpt_TextGeneration_new_1text_1generation
+JNIEXPORT jlong JNICALL Java_eu_iashchak_linkgpt_TextGeneration_new_1text_1generation
   (JNIEnv *, jobject, jstring);
 
 /*
  * Class:     eu_iashchak_linkgpt_TextGeneration
  * Method:    generate_text
- * Signature: (Ljava/lang/String;I)Ljava/lang/String;
+ * Signature: (JLjava/lang/String;I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_eu_iashchak_linkgpt_TextGeneration_generate_1text
-  (JNIEnv *, jobject, jstring, jint);
+  (JNIEnv *, jobject, jlong, jstring, jint);
 
 #ifdef __cplusplus
 }

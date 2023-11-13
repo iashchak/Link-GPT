@@ -10,26 +10,34 @@ extern "C" {
 /*
  * Class:     eu_iashchak_linkgpt_Dialog
  * Method:    to_string
- * Signature: ()Ljava/lang/String;
+ * Signature: (J)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_eu_iashchak_linkgpt_Dialog_to_1string
-  (JNIEnv *, jobject);
+  (JNIEnv *, jobject, jlong);
 
 /*
  * Class:     eu_iashchak_linkgpt_Dialog
  * Method:    with_system
- * Signature: ()Leu/iashchak/linkgpt/Dialog;
+ * Signature: (J)J
  */
-JNIEXPORT jobject JNICALL Java_eu_iashchak_linkgpt_Dialog_with_1system
+JNIEXPORT jlong JNICALL Java_eu_iashchak_linkgpt_Dialog_with_1system
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     eu_iashchak_linkgpt_Dialog
+ * Method:    new_dialog
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_eu_iashchak_linkgpt_Dialog_new_1dialog
   (JNIEnv *, jobject);
 
 /*
  * Class:     eu_iashchak_linkgpt_Dialog
  * Method:    add_message
- * Signature: (Leu/iashchak/linkgpt/Message;)Leu/iashchak/linkgpt/Dialog;
+ * Signature: (JJ)J
  */
-JNIEXPORT jobject JNICALL Java_eu_iashchak_linkgpt_Dialog_add_1message
-  (JNIEnv *, jobject, jobject);
+JNIEXPORT jlong JNICALL Java_eu_iashchak_linkgpt_Dialog_add_1message
+  (JNIEnv *, jobject, jlong, jlong);
 
 #ifdef __cplusplus
 }

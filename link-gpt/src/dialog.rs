@@ -16,9 +16,7 @@ impl Dialog {
         let system_message_role = "system";
         let mut messages = vec![Message::from((system_message_role, system_message_text))];
         messages.append(&mut self.messages.clone());
-        Self {
-            messages,
-        }
+        Self { messages }
     }
 
     pub fn add_message(&mut self, message: Message) -> &mut Dialog {
@@ -29,7 +27,12 @@ impl Dialog {
 
 impl ToString for Dialog {
     fn to_string(&self) -> String {
-        return self.messages.iter().map(|message| message.to_string()).collect::<Vec<String>>().join("\n");
+        return self
+            .messages
+            .iter()
+            .map(|message| message.to_string())
+            .collect::<Vec<String>>()
+            .join("\n");
     }
 }
 
@@ -45,5 +48,4 @@ mod tests {
         dialog.add_message(("user1887162351", "Походу").into());
         assert_eq!(dialog.to_string(), "<|im_start|>system\nТы ИИ обученный на беседах с людьми в чате Игоря Линка. Твоя задача - продолжить диалог.<|im_end|>\n<|im_start|>user1887162351\nЭто мне нужно<|im_end|>\n<|im_start|>user1457214229\nТебя у келя забанили ?<|im_end|>\n<|im_start|>user1887162351\nПоходу<|im_end|>");
     }
-
 }

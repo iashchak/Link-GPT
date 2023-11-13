@@ -1,13 +1,12 @@
+use crate::tokenizer_output_stream::TokenOutputStream;
 use anyhow::{Error as E, Result};
-use candle_core::{Device, DType, Tensor};
+use candle_core::{DType, Device, Tensor};
 use candle_transformers::generation::LogitsProcessor;
 use candle_transformers::models::mistral::Config;
 use candle_transformers::models::quantized_mistral::Model as QMistral;
 use hf_hub::{api::sync::Api, Repo, RepoType};
 use indicatif::ProgressIterator;
 use tokenizers::Tokenizer;
-use crate::tokenizer_output_stream::TokenOutputStream;
-
 
 pub struct TextGeneration {
     model: QMistral,
@@ -17,7 +16,6 @@ pub struct TextGeneration {
     repeat_last_n: usize,
 }
 
-
 impl TextGeneration {
     pub fn new(model_id: &str) -> Result<Self> {
         let seed = 299792458;
@@ -25,7 +23,8 @@ impl TextGeneration {
         let top_p = None;
         let repeat_last_n = 64;
 
-        let (model, tokenizer) = TextGeneration::get_model_and_tokenizer(model_id).map_err(E::msg)?;
+        let (model, tokenizer) =
+            TextGeneration::get_model_and_tokenizer(model_id).map_err(E::msg)?;
         let device = Device::Cpu;
         let logits_processor = LogitsProcessor::new(seed, temperature, top_p);
 
@@ -43,13 +42,18 @@ impl TextGeneration {
         let use_flash_attn = false;
 
         let api = Api::new()?;
-        let repo = api.repo(Repo::with_revision(model_id.parse().unwrap(), RepoType::Model, revision));
+        let repo = api.repo(Repo::with_revision(
+            model_id.parse().unwrap(),
+            RepoType::Model,
+            revision,
+        ));
         let tokenizer_filename = repo.get("tokenizer.json")?;
         let model_file = repo.get("model-q4k.gguf").map_err(|e| anyhow::anyhow!(e))?;
         let tokenizer = Tokenizer::from_file(tokenizer_filename).map_err(|e| anyhow::anyhow!(e))?;
 
         let config = Config::config_7b_v0_1(use_flash_attn).with_custom_vocab_size(32002);
-        let vb = candle_transformers::quantized_var_builder::VarBuilder::from_gguf(model_file).map_err(|e| anyhow::anyhow!(e))?;
+        let vb = candle_transformers::quantized_var_builder::VarBuilder::from_gguf(model_file)
+            .map_err(|e| anyhow::anyhow!(e))?;
         let model = QMistral::new(&config, vb).map_err(|e| anyhow::anyhow!(e))?;
 
         Ok((model, tokenizer))
@@ -69,6 +73,7 @@ impl TextGeneration {
         for &t in tokens.iter() {
             self.tokenizer.next_token(t)?;
         }
+        println!("Tokens: {:?}", tokens);
 
         let mut generated_tokens = 0usize;
         let eos_token = match self.tokenizer.get_token("</s>") {
@@ -76,12 +81,18 @@ impl TextGeneration {
             None => anyhow::bail!("cannot find the </s> token"),
         };
         let mut generated_text = String::new();
-        for index in (0..sample_len).progress() {
+        println!("Generating tokens...");
+        for index in (0..sample_len)
+            .progress()
+            .with_style(indicatif::ProgressStyle::default_spinner())
+        {
             let context_size = if index > 0 { 1 } else { tokens.len() };
             let start_pos = tokens.len().saturating_sub(context_size);
             let ctxt = &tokens[start_pos..];
             let input = Tensor::new(ctxt, &self.device)?.unsqueeze(0)?;
+            println!("Input: {:?}", input);
             let logits = self.model.forward(&input, start_pos)?;
+            println!("Forwarded");
             let logits = logits.squeeze(0)?.squeeze(0)?.to_dtype(DType::F32)?;
             let next_token = self.logits_processor.sample(&logits)?;
             tokens.push(next_token);
