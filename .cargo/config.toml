@@ -1,2 +1,2 @@
-[build]
+[build.aarch64-linux-android]
 rustflags = ["-C target-feature=+fp16"]
