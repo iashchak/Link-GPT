@@ -16,10 +16,12 @@ Take the latest version of built artifact from releases (TBD)
 
 1. Install [Rust](https://www.rust-lang.org/tools/install)
 2. Clone [the repo](https://github.com/iashchak/audiencer.git)
+
     ```sh
     git clone https://github.com/iashchak/audiencer.git
     ```
 3. Build
+
     ```sh
     cd audiencer
     cargo run --release link_gpt_app
