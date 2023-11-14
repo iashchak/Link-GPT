@@ -11,7 +11,7 @@ public class Dialog {
 
     // Load the native library containing the Rust Dialog implementation
     static {
-        System.loadLibrary("link_gpt_jni");
+        System.loadLibrary("resource/libs/link_gpt/x86_64-pc-windows-gnu/link_gpt_jni");
     }
 
     /**

@@ -1,12 +1,12 @@
 [workspace]
 members = [
-    "link-gpt",
-    "link-gpt-app",
-    "link-gpt-jni"
+    "link_gpt",
+    "link_gpt_app",
+    "link_gpt_jni"
 ]
 default-members = [
-    "link-gpt",
-    "link-gpt-app",
-    "link-gpt-jni"
+    "link_gpt",
+    "link_gpt_app",
+    "link_gpt_jni"
 ]
 resolver = "2"

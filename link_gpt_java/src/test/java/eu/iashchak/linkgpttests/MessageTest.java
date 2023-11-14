@@ -1,9 +1,9 @@
 package eu.iashchak.linkgpttests;
 
 import eu.iashchak.linkgpt.Message;
-import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class MessageTest {
     @Test

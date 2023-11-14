@@ -1255,7 +1255,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "link-gpt"
+name = "link_gpt"
 version = "0.1.0"
 dependencies = [
  "anyhow",
@@ -1269,19 +1269,19 @@ dependencies = [
 ]
 
 [[package]]
-name = "link-gpt-app"
+name = "link_gpt_app"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "link-gpt",
+ "link_gpt",
 ]
 
 [[package]]
-name = "link-gpt-jni"
+name = "link_gpt_jni"
 version = "0.1.0"
 dependencies = [
  "jni",
- "link-gpt",
+ "link_gpt",
 ]
 
 [[package]]

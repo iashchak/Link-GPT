@@ -17,7 +17,7 @@ public class Message {
     // Load the native library containing the Rust Message implementation
     static {
         try {
-            System.loadLibrary("link_gpt_jni");
+            System.loadLibrary("resource/libs/link_gpt/x86_64-pc-windows-gnu/link_gpt_jni");
         } catch (UnsatisfiedLinkError e) {
             System.err.println("Native code library failed to load.\n" + e);
             System.exit(1);

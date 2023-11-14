@@ -10,7 +10,7 @@ class TextGeneration {
 
     // Load the native library that contains the Rust TextGeneration implementation
     static {
-        System.loadLibrary("link_gpt_jni");
+        System.loadLibrary("resource/libs/link_gpt/x86_64-pc-windows-gnu/link_gpt_jni");
     }
 
     /**
@@ -21,7 +21,6 @@ class TextGeneration {
      */
     public TextGeneration(String model_path) {
         ptr = new_text_generation(model_path);
-        System.out.println("TextGeneration created");
     }
 
     /**

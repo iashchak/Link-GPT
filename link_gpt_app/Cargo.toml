@@ -1,5 +1,5 @@
 [package]
-name = "link-gpt-app"
+name = "link_gpt_app"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,4 +7,4 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.75"
-link-gpt = { path = "../link-gpt" }
+link_gpt = { path = "../link_gpt" }

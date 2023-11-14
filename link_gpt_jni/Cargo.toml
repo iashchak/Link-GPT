@@ -1,5 +1,5 @@
 [package]
-name = "link-gpt-jni"
+name = "link_gpt_jni"
 version = "0.1.0"
 edition = "2021"
 
@@ -9,5 +9,5 @@ crate_type = ["cdylib"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-link-gpt = { path = "../link-gpt" }
+link_gpt = { path = "../link_gpt" }
 jni = "0.21.1"

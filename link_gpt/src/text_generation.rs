@@ -1,12 +1,13 @@
-use crate::tokenizer_output_stream::TokenOutputStream;
 use anyhow::{Error as E, Result};
-use candle_core::{DType, Device, Tensor};
+use candle_core::{Device, DType, Tensor};
 use candle_transformers::generation::LogitsProcessor;
 use candle_transformers::models::mistral::Config;
 use candle_transformers::models::quantized_mistral::Model as QMistral;
 use hf_hub::{api::sync::Api, Repo, RepoType};
-use indicatif::ProgressIterator;
+use indicatif::{ProgressIterator, ProgressStyle};
 use tokenizers::Tokenizer;
+
+use crate::tokenizer_output_stream::TokenOutputStream;
 
 pub struct TextGeneration {
     model: QMistral,
@@ -70,25 +71,20 @@ impl TextGeneration {
         for &t in tokens.iter() {
             self.tokenizer.next_token(t)?;
         }
-        println!("Tokens: {:?}", tokens);
-
         let eos_token = match self.tokenizer.get_token("</s>") {
             Some(token) => token,
             None => anyhow::bail!("cannot find the </s> token"),
         };
         let mut generated_text = String::new();
-        println!("Generating tokens...");
         for index in (0..sample_len)
             .progress()
-            .with_style(indicatif::ProgressStyle::default_spinner())
+            .with_style(ProgressStyle::default_bar())
         {
             let context_size = if index > 0 { 1 } else { tokens.len() };
             let start_pos = tokens.len().saturating_sub(context_size);
             let ctxt = &tokens[start_pos..];
             let input = Tensor::new(ctxt, &self.device)?.unsqueeze(0)?;
-            println!("Input: {:?}", input);
             let logits = self.model.forward(&input, start_pos)?;
-            println!("Forwarded");
             let logits = logits.squeeze(0)?.squeeze(0)?.to_dtype(DType::F32)?;
             let next_token = self.logits_processor.sample(&logits)?;
             tokens.push(next_token);
