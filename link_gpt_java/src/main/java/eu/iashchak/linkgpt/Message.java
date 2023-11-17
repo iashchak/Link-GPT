@@ -1,31 +1,25 @@
 package eu.iashchak.linkgpt;
 
+import eu.iashchak.linkgpt.utils.NativeLibrary;
+
 /**
  * This class serves as a Java binding to the Rust 'Message' struct.
  * It provides functionality for creating and manipulating message objects,
  * with support for native operations through JNI.
  */
 public class Message {
-    // Pointer to the native Rust Message structure
-    private final long ptr;
-
-    // Getter for the pointer to the native Rust Message structure to be used in Dialog.java
-    public long getPtr() {
-        return ptr;
-    }
-
     // Load the native library containing the Rust Message implementation
     static {
         try {
-            System.loadLibrary("resource/libs/link_gpt/x86_64-pc-windows-gnu/link_gpt_jni");
-        } catch (UnsatisfiedLinkError e) {
-            System.err.println("Native code library failed to load.\n" + e);
-            System.exit(1);
-        } catch (SecurityException e) {
-            System.err.println("Security exception.\n" + e);
-            System.exit(1);
+            System.load(NativeLibrary.getLibraryPath());
+        } catch (Exception e) {
+            System.out.println("Exception: " + e);
+            throw new RuntimeException(e);
         }
     }
+
+    // Pointer to the native Rust Message structure
+    private final long ptr;
 
     /**
      * Constructs a Message instance from a single string.
@@ -46,6 +40,11 @@ public class Message {
      */
     public Message(String from, String content) {
         ptr = from_tuple(from, content);
+    }
+
+    // Getter for the pointer to the native Rust Message structure to be used in Dialog.java
+    public long getPtr() {
+        return ptr;
     }
 
     /**

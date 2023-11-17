@@ -1,17 +1,24 @@
 package eu.iashchak.linkgpt;
 
+import eu.iashchak.linkgpt.utils.NativeLibrary;
+
 /**
  * This class serves as a Java binding to the Rust 'TextGeneration' struct,
  * facilitating text generation using a specified model.
  */
-class TextGeneration {
+public class TextGeneration {
+    // Load the native library containing the Rust Text Generation implementation
+    static {
+        try {
+            System.load(NativeLibrary.getLibraryPath());
+        } catch (Exception e) {
+            System.out.println("Exception: " + e);
+            throw new RuntimeException(e);
+        }
+    }
+
     // Pointer to the native Rust TextGeneration structure
     private final long ptr;
-
-    // Load the native library that contains the Rust TextGeneration implementation
-    static {
-        System.loadLibrary("resource/libs/link_gpt/x86_64-pc-windows-gnu/link_gpt_jni");
-    }
 
     /**
      * Constructor that initializes the TextGeneration instance.

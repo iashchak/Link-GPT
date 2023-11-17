@@ -1,18 +1,25 @@
 package eu.iashchak.linkgpt;
 
+import eu.iashchak.linkgpt.utils.NativeLibrary;
+
 /**
  * This class serves as a Java binding to the Rust 'Dialog' struct.
  * It allows the creation and manipulation of dialog structures, interfacing with
  * native operations through JNI for handling dialog interactions.
  */
 public class Dialog {
-    // Pointer to the native Rust Dialog structure
-    private long ptr;
-
     // Load the native library containing the Rust Dialog implementation
     static {
-        System.loadLibrary("resource/libs/link_gpt/x86_64-pc-windows-gnu/link_gpt_jni");
+        try {
+            System.load(NativeLibrary.getLibraryPath());
+        } catch (Exception e) {
+            System.out.println("Exception: " + e);
+            throw new RuntimeException(e);
+        }
     }
+
+    // Pointer to the native Rust Dialog structure
+    private long ptr;
 
     /**
      * Constructs a Dialog instance.
