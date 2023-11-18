@@ -64,7 +64,7 @@ jobs:
       - run: ${{ matrix.command }} build --release --target ${{ matrix.target }}
         name: Build native library for ${{ matrix.build }}
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         name: Upload native library for ${{ matrix.build }}
         if: github.ref == 'refs/heads/main'
         with:
