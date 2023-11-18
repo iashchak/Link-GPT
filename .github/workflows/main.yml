@@ -1,18 +1,14 @@
 name: Rust CI
-on: [ push ]
+on:
+  push:
+  release:
+    types: [published]
 jobs:
   build-native-library:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        # Include all "Tier 1 with Host Tools" targets and "Tier 2 with Host Tools" targets for Windows and macOS,
-        # excluding *-pc-windows-msvc, which requires cross-toolchains. Goal is one option per OS per architecture.
-        # https://doc.rust-lang.org/rustc/platform-support.html
-        # https://github.com/cross-rs/cross#supported-targets
-        # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
         include:
-          # 32-bit (i686)
-          # i686-apple-darwin is Tier 3.
           - build: linux-32-bit
             os: ubuntu-latest
             target: i686-unknown-linux-gnu
@@ -23,7 +19,6 @@ jobs:
             target: i686-pc-windows-gnu
             command: cross
             lib_ext: .dll
-          # 64-bit (x86)
           - build: linux-64-bit
             os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
@@ -39,8 +34,6 @@ jobs:
             target: x86_64-pc-windows-gnu
             command: cross
             lib_ext: .dll
-          # 64-bit (ARM)
-          # aarch64-pc-windows-gnullvm is Tier 3.
           - build: macos-arm
             os: macos-latest
             target: aarch64-apple-darwin
@@ -51,7 +44,6 @@ jobs:
             target: aarch64-unknown-linux-gnu
             command: cross
             lib_ext: .so
-          # Android config
           - name: android-arm
             os: ubuntu-latest
             target: aarch64-linux-android
@@ -74,40 +66,37 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         name: Upload native library for ${{ matrix.build }}
+        if: github.ref == 'refs/heads/main'
         with:
           name: ${{ matrix.target }}
           path: |
-            target/${{ matrix.target }}/release/*link_gpt_jni${{ matrix.lib_ext }}
-            target/${{ matrix.target }}/release/*liblink_gpt_jni${{ matrix.lib_ext }}
+            target/${{ matrix.target }}/release/link_gpt_jni${{ matrix.lib_ext }}
+            target/${{ matrix.target }}/release/liblink_gpt_jni${{ matrix.lib_ext }}
 
   build-java-library:
     runs-on: ubuntu-latest
     needs: build-native-library
+    if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
+        name: Checkout code for Java library
 
       - uses: actions/download-artifact@v3
         name: Download all native libraries
         with:
           path: link_gpt_java/src/main/resources/libs/link_gpt
 
-      - name: Print the current structure
-        run: ls -R link_gpt_java/src/main/resources/libs/link_gpt
-
       - uses: actions/setup-java@v3
+        name: Set up JDK 11
         with:
           distribution: temurin
           java-version: 11
           build-root-directory: ./link_gpt_java
 
-      - name: Setup Gradle
+      - name: Publish package
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: assemble
+          arguments: publish
           build-root-directory: ./link_gpt_java
-
-      - uses: actions/upload-artifact@v2
-        name: Upload jar
-        with:
-          name: link_gpt_java
-          path: link_gpt_java/build/libs/link_gpt_java*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
