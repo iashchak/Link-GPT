@@ -3,6 +3,7 @@ on:
   push:
   release:
     types: [published]
+
 jobs:
   build-native-library:
     runs-on: ${{ matrix.os }}
@@ -66,7 +67,6 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         name: Upload native library for ${{ matrix.build }}
-        if: github.ref == 'refs/heads/main'
         with:
           name: ${{ matrix.target }}
           path: |
@@ -76,7 +76,6 @@ jobs:
   build-java-library:
     runs-on: ubuntu-latest
     needs: build-native-library
-    if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
         name: Checkout code for Java library
