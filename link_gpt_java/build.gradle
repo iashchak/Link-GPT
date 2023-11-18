@@ -33,6 +33,7 @@ publishing {
     publications {
         gpr(MavenPublication) {
             from components.java
+            artifactId = 'link-gpt'
         }
     }
 }
