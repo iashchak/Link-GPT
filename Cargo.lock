@@ -1256,7 +1256,7 @@ dependencies = [
 
 [[package]]
 name = "link_gpt"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "anyhow",
  "candle-core",
@@ -1270,7 +1270,7 @@ dependencies = [
 
 [[package]]
 name = "link_gpt_app"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "anyhow",
  "link_gpt",
@@ -1278,7 +1278,7 @@ dependencies = [
 
 [[package]]
 name = "link_gpt_jni"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "jni",
  "link_gpt",
