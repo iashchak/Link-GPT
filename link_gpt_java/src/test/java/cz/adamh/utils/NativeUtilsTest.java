@@ -22,10 +22,33 @@
  * SOFTWARE.
  */
 
-package eu.iashchak.linkgpt.errors;
+package cz.adamh.utils;
 
-public class UnsupportedOperatingSystemException extends Exception {
-    public UnsupportedOperatingSystemException(String message) {
-        super(message);
+import org.junit.jupiter.api.Test;
+
+import java.io.FileNotFoundException;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+public class NativeUtilsTest {
+
+    @Test
+    public void testLoadLibraryIllegalPath() {
+        assertThrows(IllegalArgumentException.class, () -> NativeUtils.loadLibraryFromJar("libtest.so"));
+    }
+
+    @Test
+    public void testLoadLibraryIllegalPrefix() {
+        assertThrows(IllegalArgumentException.class, () -> NativeUtils.loadLibraryFromJar("/l"));
+    }
+
+    @Test
+    public void testLoadLibraryNonExistentPath() {
+        assertThrows(FileNotFoundException.class, () -> NativeUtils.loadLibraryFromJar("/libtest.so"));
+    }
+
+    @Test
+    public void testLoadLibraryNullPath() {
+        assertThrows(IllegalArgumentException.class, () -> NativeUtils.loadLibraryFromJar(null));
     }
 }

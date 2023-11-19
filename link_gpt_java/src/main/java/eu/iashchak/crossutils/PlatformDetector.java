@@ -22,10 +22,38 @@
  * SOFTWARE.
  */
 
-package eu.iashchak.linkgpt.errors;
+package eu.iashchak.crossutils;
 
-public class UnsupportedOperatingSystemException extends Exception {
-    public UnsupportedOperatingSystemException(String message) {
-        super(message);
+public class PlatformDetector {
+    public static Triplet detectPlatform() {
+        if (isWindows()) {
+            return Triplet.WINDOWS_X86_64;
+        } else if (isLinux()) {
+            if (isAndroid()) {
+                return Triplet.ANDROID_ARMV7;
+            } else {
+                return Triplet.LINUX_X86_64;
+            }
+        } else if (isMacOS()) {
+            return Triplet.MACOS_AARCH64;
+        } else {
+            throw new RuntimeException("Unsupported platform");
+        }
+    }
+
+    static boolean isAndroid() {
+        return System.getProperty("java.vm.name").equalsIgnoreCase("Dalvik");
+    }
+
+    static boolean isWindows() {
+        return System.getProperty("os.name").toLowerCase().contains("win");
+    }
+
+    static boolean isLinux() {
+        return System.getProperty("os.name").toLowerCase().contains("nux");
+    }
+
+    static boolean isMacOS() {
+        return System.getProperty("os.name").toLowerCase().contains("mac");
     }
 }

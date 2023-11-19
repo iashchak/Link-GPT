@@ -22,10 +22,26 @@
  * SOFTWARE.
  */
 
-package eu.iashchak.linkgpt.errors;
+package eu.iashchak.crossutils;
 
-public class UnsupportedOperatingSystemException extends Exception {
-    public UnsupportedOperatingSystemException(String message) {
-        super(message);
+public enum Triplet {
+    LINUX_X86_64("x86_64-unknown-linux-gnu", ".so", "lib"), WINDOWS_X86_64("x86_64-pc-windows-gnu", ".dll", ""), MACOS_AARCH64("aarch64-apple-darwin", ".dylib", "lib"), ANDROID_ARMV7("armv7-linux-androideabi", ".so", "lib");
+
+    private final String name;
+    private final String libExtension;
+    private final String libPrefix;
+
+    Triplet(String name, String libExtension, String libPrefix) {
+        this.name = name;
+        this.libExtension = libExtension;
+        this.libPrefix = libPrefix;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getLibFileName(String libName) {
+        return libPrefix + libName + libExtension;
     }
 }
