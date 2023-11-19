@@ -40,7 +40,7 @@ public class LinkGPTLoader {
 
     static final String libDirName = "link_gpt";
     static final String libName = "link_gpt_jni";
-    static final Path jarLibsDir = Paths.get("/resources", "main", "libs");
+    static final Path jarLibsDir = Paths.get("/libs");
     static final Path pathLibsDir = Paths.get(System.getProperty("user.dir"), "build", "resources", "main", "libs");
     private static final Logger logger = Logger.getLogger(LinkGPTLoader.class.getName());
 
