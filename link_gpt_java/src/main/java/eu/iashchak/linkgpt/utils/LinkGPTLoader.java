@@ -29,32 +29,73 @@ import eu.iashchak.crossutils.PlatformDetector;
 import eu.iashchak.crossutils.Triplet;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.logging.Logger;
 
+/**
+ * Loads the library
+ */
 public class LinkGPTLoader {
+
+    static final String libDirName = "link_gpt";
+    static final String libName = "link_gpt_jni";
+    static final Path jarLibsDir = Paths.get("/resources", "main", "libs");
+    static final Path pathLibsDir = Paths.get(System.getProperty("user.dir"), "build", "resources", "main", "libs");
+    private static final Logger logger = Logger.getLogger(LinkGPTLoader.class.getName());
+
+    /**
+     * Loads the library
+     */
     public static void load() {
         Triplet triplet = PlatformDetector.detectPlatform();
-        String libFileName = triplet.getLibFileName("link_gpt_jni");
+        String libFileName = triplet.getLibFileName(libName);
         try {
             loadFromPath(triplet, libFileName);
-        } catch (UnsatisfiedLinkError e) {
+        } catch (IOException e) {
+            logger.info("Unable to load " + libFileName + " from path. It seems that the you ran the program from the jar file. Loading from jar");
             try {
                 loadFromJar(triplet, libFileName);
-            } catch (IOException ioException) {
-                throw new RuntimeException(ioException);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
         }
     }
 
-    static void loadFromJar(Triplet triplet, String lib) throws IOException {
-        String pathInJar = String.join("/", "/resources", "main", "libs", "link_gpt", triplet.getName(), lib);
 
-        NativeUtils.loadLibraryFromJar(pathInJar);
+    /**
+     * Loads the library from the jar file
+     * @param triplet platform triplet
+     * @param lib    library name
+     * @throws IOException if the library cannot be loaded
+     */
+    static void loadFromJar(Triplet triplet, String lib) throws IOException {
+        Path path = Paths.get(jarLibsDir.toString(), libDirName, triplet.getName(), lib);
+
+        String unixPath = path.toString().replace('\\', '/');
+
+        logger.info(String.format("Loading %s from jar", unixPath));
+
+        NativeUtils.loadLibraryFromJar(unixPath);
     }
 
-    static void loadFromPath(Triplet triplet, String lib) throws UnsatisfiedLinkError {
-        String path = System.getProperty("user.dir") + "/build" + String.join("/", "/resources", "main", "libs", "link_gpt", triplet.getName(), lib);
+    /**
+     * Loads the library from the path
+     * @param triplet platform triplet
+     * @param lib    library name
+     * @throws IOException if the library cannot be loaded
+     */
+    static void loadFromPath(Triplet triplet, String lib) throws UnsatisfiedLinkError, IOException {
+        // check if the file exists
+        Path path = Paths.get(pathLibsDir.toString(), libDirName, triplet.getName(), lib);
 
-        System.load(path);
+        logger.info(String.format("Loading %s from path", path.toAbsolutePath()));
+
+        if (!path.toFile().exists()) {
+            throw new IOException("File " + path.toAbsolutePath() + " does not exist");
+        }
+
+        System.load(path.toAbsolutePath().toString());
     }
 
 }
