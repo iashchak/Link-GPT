@@ -45,7 +45,7 @@ jobs:
       - run: ${{ matrix.command }} build --release --target ${{ matrix.target }}
         name: Build native library for ${{ matrix.build }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         name: Upload native library for ${{ matrix.build }}
         with:
           name: ${{ matrix.target }}
