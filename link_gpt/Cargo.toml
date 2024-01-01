@@ -10,7 +10,7 @@ candle-transformers = { git = "https://github.com/iashchak/candle.git", version 
 candle-nn = { git = "https://github.com/iashchak/candle.git", version = "0.3.1" }
 tokenizers = "0.15.0"
 hf-hub = "0.3.2"
-anyhow = "1.0.75"
+anyhow = "1.0.78"
 candle-core = { git = "https://github.com/iashchak/candle.git", version = "0.3.1" }
 indicatif = "0.17.7"
 
