@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 candle-transformers = { git = "https://github.com/iashchak/candle.git", version = "0.3.1" }
 candle-nn = { git = "https://github.com/iashchak/candle.git", version = "0.3.1" }
-tokenizers = "0.15.0"
+tokenizers = "0.15.2"
 hf-hub = "0.3.2"
 anyhow = "1.0.75"
 candle-core = { git = "https://github.com/iashchak/candle.git", version = "0.3.1" }
