@@ -12,7 +12,7 @@ tokenizers = "0.15.0"
 hf-hub = "0.3.2"
 anyhow = "1.0.75"
 candle-core = { git = "https://github.com/iashchak/candle.git", version = "0.3.1" }
-indicatif = "0.17.7"
+indicatif = "0.17.8"
 
 [target.'cfg(unix)'.dependencies]
 openssl = { version = "0.10", features = ["vendored"] }
